@@ -1,0 +1,4 @@
+2026-08-18 09:12:31 INFO [AUTH] User login successful user=rahul
+2026-08-18 09:14:22 ERROR [DB] Connection failed host=db01
+2026-08-18 09:15:12 WARNING [API] Response time exceeded threshold=2.5
+2026-08-18 09:16:42 ERROR [AUTH] Invalid credentials user=test
