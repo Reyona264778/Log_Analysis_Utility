@@ -36,5 +36,48 @@ def parse_line(file_name):
         print("Log File not found")
     return record
 
+def generate_statistics(records_dir):
+    total_records = 0
+
+    info_count = 0
+    warning_count = 0
+    error_count = 0
+    errors_by_module = {}
+
+    for file_name, records in records_dir.items():
+
+        total_records += len(records)
+        
+        for record in records:
+
+            if record["level"] == "INFO":
+                info_count += 1
+
+            elif record["level"] == "WARNING":
+                warning_count += 1
+
+            elif record["level"] == "ERROR":
+                error_count += 1
+                module = record["module"]
+
+                if module in errors_by_module:
+                    errors_by_module[module] += 1
+                else:
+                    errors_by_module[module] = 1
+
+    statistics = {
+        "total_records": total_records,
+        "INFO": info_count,
+        "WARNING": warning_count,
+        "ERROR": error_count,
+        "errors_by_module": errors_by_module
+    }
+
+    return statistics
+
+
 result = log_files()
-print(result)
+status = generate_statistics(result)
+print(status)
+
+
