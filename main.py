@@ -1,5 +1,6 @@
 # from sample_logs import *
 import os
+import json
 
 def log_files():
     records_dir = {}
@@ -43,13 +44,15 @@ def generate_statistics(records_dir):
     warning_count = 0
     error_count = 0
     errors_by_module = {}
+    errors_by_hour = {}
+    frequent_error_messages = {}
 
     for file_name, records in records_dir.items():
 
         total_records += len(records)
         
         for record in records:
-
+            
             if record["level"] == "INFO":
                 info_count += 1
 
@@ -58,6 +61,8 @@ def generate_statistics(records_dir):
 
             elif record["level"] == "ERROR":
                 error_count += 1
+
+                # Errors By module
                 module = record["module"]
 
                 if module in errors_by_module:
@@ -65,19 +70,54 @@ def generate_statistics(records_dir):
                 else:
                     errors_by_module[module] = 1
 
+                # Errors By Hour
+                timestamp = record["timestamp"]
+                date, time = timestamp.split()
+                error_hour = f"{date} {time[:2]}"
+
+                if error_hour in errors_by_hour:
+                    errors_by_hour[error_hour] += 1
+                else:
+                    errors_by_hour[error_hour] = 1
+
+                #Frequent error messages
+                # Top Error Messages
+
+                message = record["msg"]
+
+                if message in frequent_error_messages:
+                    frequent_error_messages[message] += 1
+                else:
+                    frequent_error_messages[message] = 1
+
+
     statistics = {
         "total_records": total_records,
         "INFO": info_count,
         "WARNING": warning_count,
         "ERROR": error_count,
-        "errors_by_module": errors_by_module
+        "errors_by_module": errors_by_module,
+        "errors_by_hour": errors_by_hour,
+        "frequent_error_messages": frequent_error_messages
     }
 
     return statistics
 
+def generate_report(statistics):
+    try:
+        with open("report.json", "w") as file:
+            json.dump(statistics, file, indent=4)
+
+        print("Report generated successfully.")
+
+    except Exception as error:
+        print(f"Error generating report: {error}")
+
+
 
 result = log_files()
+print(f"\n\n {10*'*'} RESULT {10*'*'} {result} \n\n {10*'*'} End of Result {10*'*'}")
 status = generate_statistics(result)
 print(status)
-
+generate_report(status)
 

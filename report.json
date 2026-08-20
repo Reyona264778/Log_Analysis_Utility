@@ -1,0 +1,17 @@
+{
+    "total_records": 4,
+    "INFO": 1,
+    "WARNING": 1,
+    "ERROR": 2,
+    "errors_by_module": {
+        "DB": 1,
+        "AUTH": 1
+    },
+    "errors_by_hour": {
+        "2026-08-18 09": 2
+    },
+    "frequent_error_messages": {
+        "Connection failed host=db01": 1,
+        "Invalid credentials user=test": 1
+    }
+}
